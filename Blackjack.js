@@ -3,10 +3,10 @@ const Deck = require('./Deck')
 const SHOE_SIZE = 3
 
 class User {
-    constructor(id, tokens) {
+    constructor(id, tokens, dealer) {
         this.id = id
         this.tokens = tokens
-        this.hand = new Hand(false)
+        this.hand = new Hand(dealer)
     }
 
     play(bet, deck, autoPlay) {
@@ -98,7 +98,7 @@ class Hand {
     }
 
     autoPlay(deck) {
-        while (this.handValue < 17) {
+        while (this.handValue < 16) {
             this.draw(deck, 1)
         }
     }
@@ -154,21 +154,22 @@ function simulatePlay(plays) {
         let shoe = new Deck.Deck(SHOE_SIZE);
         shoe.shuffle(2);
         
-        let dealerHand = new Hand(true, 0); // This hand is the dealer's hand and has an userId of 0.
-        let playerHand = new Hand(false, 1); // This hand is not the dealer's hand and has an userId of 1.
-        playerHand.draw(shoe, 2);
-        dealerHand.draw(shoe, 2);
+        const player = new User(1, 100000, false)
+        const dealer = new User(0, 0, true)
+
+        player.hand.draw(shoe, 2);
+        dealer.hand.draw(shoe, 2);
         
-        playerHand.autoPlay(shoe)
-        dealerHand.autoPlay(shoe)
+        player.hand.autoPlay(shoe)
+        dealer.hand.autoPlay(shoe)
         
-        let win = checkWin(dealerHand, playerHand)
+        let win = checkWin(dealer.hand, player.hand)
         if (win == 0) {
             dealerWins += 1
         }
         else if (win == 1) {
             random = Deck.randInt(500)
-            if (random == 1) {console.log(`Dealer hand: ${dealerHand.cardNames} | Value: ${dealerHand.handValue}\nPlayer hand: ${playerHand.cardNames} | Value: ${playerHand.handValue}\n`)}
+            if (random == 1) {console.log(`Dealer hand: ${dealer.hand.cardNames} | Value: ${dealer.hand.handValue}\nPlayer hand: ${player.hand.cardNames} | Value: ${player.hand.handValue}\n`)}
             playerWins += 1
         }
         else if (win == 4) {
@@ -184,7 +185,7 @@ function simulatePlay(plays) {
 
 // Main program starts here.
 
-simulatePlay(100000)
+simulatePlay(1000000)
 
 
 
