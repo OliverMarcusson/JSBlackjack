@@ -29,17 +29,25 @@ class Deck {
 class Card {
         constructor(value, suite, color) {
             this.value = value
+            this.clothed = false
             if (value == 11) {
                 this.valueName = 'Knight'
+                this.value = 10
+                this.clothed = true
             }
             else if (value == 12) {
                 this.valueName = 'Queen'
+                this.value = 10
+                this.clothed = true
             }
             else if (value == 13) {
                 this.valueName = 'King'
+                this.value = 10
+                this.clothed = true
             }
             else if (value == 14) {
                 this.valueName = 'Ace'
+                this.value = 11
             }
             else {
                 this.valueName = value
